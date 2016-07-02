@@ -43,7 +43,7 @@ public class ChartCoordsSpace {
     private let chartSettings: ChartSettings
     private let chartSize: CGSize
     
-    public private(set) var chartInnerFrame: CGRect = CGRectZero
+    public private(set) var chartInnerFrame: CGRect = CGRect.zero
 
     private let yLowModels: [ChartAxisModel]
     private let yHighModels: [ChartAxisModel]
@@ -140,14 +140,14 @@ public class ChartCoordsSpace {
 
      - returns: An array of ChartAxisLayers
      */
-    private func generateXAxesShared(axisModels axisModels: [ChartAxisModel], offset: CGFloat, generator: ChartAxisLayerGenerator) -> [ChartAxisLayer] {
+    private func generateXAxesShared(axisModels: [ChartAxisModel], offset: CGFloat, generator: ChartAxisLayerGenerator) -> [ChartAxisLayer] {
         let chartFrame = self.chartInnerFrame
         let chartSettings = self.chartSettings
         let x = chartFrame.origin.x
         let length = chartFrame.width
         
         return generateAxisShared(axisModels: axisModels, offset: offset, boundingPointsCreator: { offset in
-            (p1: CGPointMake(x, offset), p2: CGPointMake(x + length, offset))
+            (p1: CGPoint(x: x, y: offset), p2: CGPoint(x: x + length, y: offset))
             }, nextLayerOffset: { layer in
                 layer.rect.height + chartSettings.spacingBetweenAxesX
             }, generator: generator)
@@ -162,14 +162,14 @@ public class ChartCoordsSpace {
 
      - returns: An array of ChartAxisLayers
      */
-    private func generateYAxisShared(axisModels axisModels: [ChartAxisModel], offset: CGFloat, generator: ChartAxisLayerGenerator) -> [ChartAxisLayer] {
+    private func generateYAxisShared(axisModels: [ChartAxisModel], offset: CGFloat, generator: ChartAxisLayerGenerator) -> [ChartAxisLayer] {
         let chartFrame = self.chartInnerFrame
         let chartSettings = self.chartSettings
         let y = chartFrame.origin.y
         let length = chartFrame.height
         
         return generateAxisShared(axisModels: axisModels, offset: offset, boundingPointsCreator: { offset in
-            (p1: CGPointMake(offset, y + length), p2: CGPointMake(offset, y))
+            (p1: CGPoint(x: offset, y: y + length), p2: CGPoint(x: offset, y: y))
             }, nextLayerOffset: { layer in
                 layer.rect.width + chartSettings.spacingBetweenAxesY
             }, generator: generator)
@@ -186,7 +186,7 @@ public class ChartCoordsSpace {
 
      - returns: An array of ChartAxisLayers
      */
-    private func generateAxisShared(axisModels axisModels: [ChartAxisModel], offset: CGFloat, boundingPointsCreator: (offset: CGFloat) -> (p1: CGPoint, p2: CGPoint), nextLayerOffset: (ChartAxisLayer) -> CGFloat, generator: ChartAxisLayerGenerator) -> [ChartAxisLayer] {
+    private func generateAxisShared(axisModels: [ChartAxisModel], offset: CGFloat, boundingPointsCreator: (offset: CGFloat) -> (p1: CGPoint, p2: CGPoint), nextLayerOffset: (ChartAxisLayer) -> CGFloat, generator: ChartAxisLayerGenerator) -> [ChartAxisLayer] {
         
         let chartSettings = self.chartSettings
         
@@ -218,11 +218,11 @@ public class ChartCoordsSpace {
             }.0
         }
 
-        func totalWidth(axisLayers: [ChartAxisLayer]) -> CGFloat {
+        func totalWidth(_ axisLayers: [ChartAxisLayer]) -> CGFloat {
             return totalDim(axisLayers, {$0.rect.width}, self.chartSettings.spacingBetweenAxesY)
         }
         
-        func totalHeight(axisLayers: [ChartAxisLayer]) -> CGFloat {
+        func totalHeight(_ axisLayers: [ChartAxisLayer]) -> CGFloat {
             return totalDim(axisLayers, {$0.rect.height}, self.chartSettings.spacingBetweenAxesX)
         }
         
@@ -236,11 +236,11 @@ public class ChartCoordsSpace {
         let rightWidth = yHighWidth + self.chartSettings.trailing
         let bottomHeight = xLowHeight + self.chartSettings.bottom
         
-        return CGRectMake(
-            leftWidth,
-            topHeigth,
-            self.chartSize.width - leftWidth - rightWidth,
-            self.chartSize.height - topHeigth - bottomHeight
+        return CGRect(
+            x: leftWidth,
+            y: topHeigth,
+            width: self.chartSize.width - leftWidth - rightWidth,
+            height: self.chartSize.height - topHeigth - bottomHeight
         )
     }
 }

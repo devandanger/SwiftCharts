@@ -18,7 +18,7 @@ public class HandlingLabel: UILabel {
         self.movedToSuperViewHandler?()
     }
     
-    override public func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override public func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.touchHandler?()
     }
 }

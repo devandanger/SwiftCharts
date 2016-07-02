@@ -38,7 +38,7 @@ public class ChartAxisSettings {
     var labelsToAxisSpacingX: CGFloat = 5
     var labelsToAxisSpacingY: CGFloat = 5
     var axisTitleLabelsToLabelsSpacing: CGFloat = 5
-    var lineColor:UIColor = UIColor.blackColor()
+    var lineColor:UIColor = UIColor.black()
     var axisStrokeWidth: CGFloat = 2.0
     var isAxisLineVisible: Bool = true
     
@@ -71,7 +71,7 @@ class ChartAxisLayerDefault: ChartAxisLayer {
     var axisTitleLabelDrawers: [ChartLabelDrawer] = []
     
     var rect: CGRect {
-        return CGRectMake(self.p1.x, self.p1.y, self.width, self.height)
+        return CGRect(x: self.p1.x, y: self.p1.y, width: self.width, height: self.height)
     }
     
     var axisValuesScreenLocs: [CGFloat] {
@@ -86,7 +86,7 @@ class ChartAxisLayerDefault: ChartAxisLayer {
     
     // smallest screen space between axis values
     var minAxisScreenSpace: CGFloat {
-        return self.axisValuesScreenLocs.reduce((CGFloat.max, -CGFloat.max)) {tuple, screenLoc in
+        return self.axisValuesScreenLocs.reduce((CGFloat.greatestFiniteMagnitude, -CGFloat.greatestFiniteMagnitude)) {tuple, screenLoc in
             let minSpace = tuple.0
             let previousScreenLoc = tuple.1
             return (min(minSpace, abs(screenLoc - previousScreenLoc)), screenLoc)
@@ -147,7 +147,7 @@ class ChartAxisLayerDefault: ChartAxisLayer {
         self.settings = settings
     }
     
-    func chartInitialized(chart chart: Chart) {
+    func chartInitialized(chart: Chart) {
         self.initDrawers()
     }
 
@@ -157,10 +157,10 @@ class ChartAxisLayerDefault: ChartAxisLayer {
      - parameter context: The context to draw the axis contents in
      - parameter chart:   The chart that this axis belongs to
      */
-    func chartViewDrawing(context context: CGContextRef, chart: Chart) {
+    func chartViewDrawing(context: CGContext, chart: Chart) {
         if self.settings.isAxisLineVisible {
             if let lineDrawer = self.lineDrawer {
-                CGContextSetLineWidth(context, CGFloat(self.settings.axisStrokeWidth))
+                context.setLineWidth(CGFloat(self.settings.axisStrokeWidth))
                 lineDrawer.triggerDraw(context: context, chart: chart)
             }
         }
@@ -178,15 +178,15 @@ class ChartAxisLayerDefault: ChartAxisLayer {
         fatalError("override")
     }
     
-    func generateLineDrawer(offset offset: CGFloat) -> ChartLineDrawer {
+    func generateLineDrawer(offset: CGFloat) -> ChartLineDrawer {
         fatalError("override")
     }
     
-    func generateAxisTitleLabelsDrawers(offset offset: CGFloat) -> [ChartLabelDrawer] {
+    func generateAxisTitleLabelsDrawers(offset: CGFloat) -> [ChartLabelDrawer] {
         fatalError("override")
     }
     
-    func generateLabelDrawers(offset offset: CGFloat) -> [ChartLabelDrawer] {
+    func generateLabelDrawers(offset: CGFloat) -> [ChartLabelDrawer] {
         fatalError("override")
     }
 
@@ -199,7 +199,7 @@ class ChartAxisLayerDefault: ChartAxisLayer {
 
      - returns: The location along the axis' dimension that the axis value should be displayed at
      */
-    final func screenLocForScalar(scalar: Double) -> CGFloat {
+    final func screenLocForScalar(_ scalar: Double) -> CGFloat {
         if let firstScalar = self.axisValues.first?.scalar {
             return self.screenLocForScalar(scalar, firstAxisScalar: firstScalar)
         } else {
@@ -216,7 +216,7 @@ class ChartAxisLayerDefault: ChartAxisLayer {
 
      - returns: The location of the axis value within the bounds of the axis layer
      */
-    func innerScreenLocForScalar(scalar: Double, firstAxisScalar: Double) -> CGFloat {
+    func innerScreenLocForScalar(_ scalar: Double, firstAxisScalar: Double) -> CGFloat {
         return self.length * CGFloat(scalar - firstAxisScalar) / self.modelLength
     }
 
@@ -228,7 +228,7 @@ class ChartAxisLayerDefault: ChartAxisLayer {
 
      - returns: The screen location along the axis' dimension that the axis value should be displayed at
      */
-    func screenLocForScalar(scalar: Double, firstAxisScalar: Double) -> CGFloat {
+    func screenLocForScalar(_ scalar: Double, firstAxisScalar: Double) -> CGFloat {
         fatalError("must override")
     }
     

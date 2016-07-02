@@ -9,7 +9,7 @@
 import UIKit
 
 public enum ChartLabelTextAlignment {
-    case Left, Right, Default
+    case left, right, `default`
 }
 
 public class ChartLabelSettings {
@@ -20,7 +20,7 @@ public class ChartLabelSettings {
     let shiftXOnRotation: Bool
     let textAlignment: ChartLabelTextAlignment
     
-    public init(font: UIFont = UIFont.systemFontOfSize(14), fontColor: UIColor = UIColor.blackColor(), rotation: CGFloat = 0, rotationKeep: ChartLabelDrawerRotationKeep = .Center, shiftXOnRotation: Bool = true, textAlignment: ChartLabelTextAlignment = .Default) {
+    public init(font: UIFont = UIFont.systemFont(ofSize: 14), fontColor: UIColor = UIColor.black(), rotation: CGFloat = 0, rotationKeep: ChartLabelDrawerRotationKeep = .center, shiftXOnRotation: Bool = true, textAlignment: ChartLabelTextAlignment = .default) {
         self.font = font
         self.fontColor = fontColor
         self.rotation = rotation
@@ -29,7 +29,7 @@ public class ChartLabelSettings {
         self.textAlignment = textAlignment
     }
     
-    public func copy(font: UIFont? = nil, fontColor: UIColor? = nil, rotation: CGFloat? = nil, rotationKeep: ChartLabelDrawerRotationKeep? = nil, shiftXOnRotation: Bool? = nil) -> ChartLabelSettings {
+    public func copy(_ font: UIFont? = nil, fontColor: UIColor? = nil, rotation: CGFloat? = nil, rotationKeep: ChartLabelDrawerRotationKeep? = nil, shiftXOnRotation: Bool? = nil) -> ChartLabelSettings {
         return ChartLabelSettings(
             font: font ?? self.font,
             fontColor: fontColor ?? self.fontColor,
@@ -47,7 +47,7 @@ public extension ChartLabelSettings {
 
 // coordinate of original label which will be preserved after the rotation
 public enum ChartLabelDrawerRotationKeep {
-    case Center, Top, Bottom
+    case center, top, bottom
 }
 
 public class ChartLabelDrawer: ChartContextDrawer {
@@ -73,7 +73,7 @@ public class ChartLabelDrawer: ChartContextDrawer {
         self.transform = self.transform(screenLoc, settings: settings)
     }
 
-    override func draw(context context: CGContextRef, chart: Chart) {
+    override func draw(context: CGContext, chart: Chart) {
         let labelSize = self.size
         
         let labelX = self.screenLoc.x
@@ -84,17 +84,17 @@ public class ChartLabelDrawer: ChartContextDrawer {
         }
         
         if let transform = self.transform {
-            CGContextSaveGState(context)
-            CGContextConcatCTM(context, transform)
+            context.saveGState()
+            context.concatCTM(transform)
             drawLabel()
-            CGContextRestoreGState(context)
+            context.restoreGState()
 
         } else {
             drawLabel()
         }
     }
     
-    private func transform(screenLoc: CGPoint, settings: ChartLabelSettings) -> CGAffineTransform? {
+    private func transform(_ screenLoc: CGPoint, settings: ChartLabelSettings) -> CGAffineTransform? {
         let labelSize = self.size
         
         let labelX = screenLoc.x
@@ -112,25 +112,25 @@ public class ChartLabelDrawer: ChartContextDrawer {
             let rotation = settings.rotation * CGFloat(M_PI) / CGFloat(180)
 
             
-            var transform = CGAffineTransformIdentity
+            var transform = CGAffineTransform.identity
             
-            if settings.rotationKeep == .Center {
-                transform = CGAffineTransformMakeTranslation(-(labelHalfWidth - labelHalfHeight), 0)
+            if settings.rotationKeep == .center {
+                transform = CGAffineTransform(translationX: -(labelHalfWidth - labelHalfHeight), y: 0)
                 
             } else {
                 
-                var transformToGetBounds = CGAffineTransformMakeTranslation(0, 0)
-                transformToGetBounds = CGAffineTransformTranslate(transformToGetBounds, centerX, centerY)
-                transformToGetBounds = CGAffineTransformRotate(transformToGetBounds, rotation)
-                transformToGetBounds = CGAffineTransformTranslate(transformToGetBounds, -centerX, -centerY)
-                let rect = CGRectMake(labelX, labelY, labelSize.width, labelSize.height)
-                let newRect = CGRectApplyAffineTransform(rect, transformToGetBounds)
+                var transformToGetBounds = CGAffineTransform(translationX: 0, y: 0)
+                transformToGetBounds = transformToGetBounds.translateBy(x: centerX, y: centerY)
+                transformToGetBounds = transformToGetBounds.rotate(rotation)
+                transformToGetBounds = transformToGetBounds.translateBy(x: -centerX, y: -centerY)
+                let rect = CGRect(x: labelX, y: labelY, width: labelSize.width, height: labelSize.height)
+                let newRect = rect.apply(transform: transformToGetBounds)
 
                 let offsetTop: CGFloat = {
                     switch settings.rotationKeep {
-                    case .Top:
+                    case .top:
                         return labelY - newRect.origin.y
-                    case .Bottom:
+                    case .bottom:
                         return newRect.origin.y + newRect.size.height - (labelY + rect.size.height)
                     default:
                         return 0
@@ -140,13 +140,13 @@ public class ChartLabelDrawer: ChartContextDrawer {
                 // when the labels are diagonal we have to shift a little so they look aligned with axis value. We align origin of new rect with the axis value
                 if settings.shiftXOnRotation {
                     let xOffset: CGFloat = abs(settings.rotation) == 90 ? 0 : centerX - newRect.origin.x
-                    transform = CGAffineTransformTranslate(transform, xOffset, offsetTop)
+                    transform = transform.translateBy(x: xOffset, y: offsetTop)
                 }
             }
 
-            transform = CGAffineTransformTranslate(transform, centerX, centerY)
-            transform = CGAffineTransformRotate(transform, rotation)
-            transform = CGAffineTransformTranslate(transform, -centerX, -centerY)
+            transform = transform.translateBy(x: centerX, y: centerY)
+            transform = transform.rotate(rotation)
+            transform = transform.translateBy(x: -centerX, y: -centerY)
             return transform
             
         } else {
@@ -155,9 +155,9 @@ public class ChartLabelDrawer: ChartContextDrawer {
     }
 
     
-    private func drawLabel(x x: CGFloat, y: CGFloat, text: String) {
+    private func drawLabel(x: CGFloat, y: CGFloat, text: String) {
         let attributes = [NSFontAttributeName: self.settings.font, NSForegroundColorAttributeName: self.settings.fontColor]
-        let attrStr = NSAttributedString(string: text, attributes: attributes)
-        attrStr.drawAtPoint(CGPointMake(x, y))
+        let attrStr = AttributedString(string: text, attributes: attributes)
+        attrStr.draw(at: CGPoint(x: x, y: y))
     }
 }

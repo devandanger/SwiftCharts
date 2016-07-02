@@ -21,7 +21,7 @@ class ChartLineDrawer: ChartContextDrawer {
         self.strokeWidth = strokeWidth
     }
 
-    override func draw(context context: CGContextRef, chart: Chart) {
+    override func draw(context: CGContext, chart: Chart) {
         ChartDrawLine(context: context, p1: self.p1, p2: self.p2, width: self.strokeWidth, color: self.color)
     }
 }

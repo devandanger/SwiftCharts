@@ -32,11 +32,11 @@ public class ChartPointTargetingView: UIView {
         let axisLengthX = chartInnerFrame.width
         let axisLengthY = chartInnerFrame.height
         
-        self.lineHorizontal = UIView(frame: CGRectMake(axisOriginX, axisOriginY, axisLengthX, CGFloat(lineWidth)))
-        self.lineVertical = UIView(frame: CGRectMake(axisOriginX, axisOriginY, CGFloat(lineWidth), axisLengthY))
+        self.lineHorizontal = UIView(frame: CGRect(x: axisOriginX, y: axisOriginY, width: axisLengthX, height: CGFloat(lineWidth)))
+        self.lineVertical = UIView(frame: CGRect(x: axisOriginX, y: axisOriginY, width: CGFloat(lineWidth), height: axisLengthY))
         
-        self.lineHorizontal.backgroundColor = UIColor.blackColor()
-        self.lineVertical.backgroundColor = UIColor.redColor()
+        self.lineHorizontal.backgroundColor = UIColor.black()
+        self.lineVertical.backgroundColor = UIColor.red()
         
         let lineWidthHalf = self.lineWidth / 2
         var targetFrameH = lineHorizontal.frame
@@ -57,7 +57,7 @@ public class ChartPointTargetingView: UIView {
         addSubview(self.lineHorizontal)
         addSubview(self.lineVertical)
         
-        UIView.animateWithDuration(NSTimeInterval(self.animDuration), delay: NSTimeInterval(self.animDelay), options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
+        UIView.animate(withDuration: TimeInterval(self.animDuration), delay: TimeInterval(self.animDelay), options: UIViewAnimationOptions.curveEaseOut, animations: { () -> Void in
             
             self.lineHorizontal.frame = self.lineHorizontalTargetFrame
             self.lineVertical.frame = self.lineVerticalTargetFrame

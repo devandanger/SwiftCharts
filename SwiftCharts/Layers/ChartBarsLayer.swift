@@ -29,7 +29,7 @@ public class ChartBarModel {
 }
 
 enum ChartBarDirection {
-    case LeftToRight, BottomToTop
+    case leftToRight, bottomToTop
 }
 
 class ChartBarsViewGenerator<T: ChartBarModel> {
@@ -43,8 +43,8 @@ class ChartBarsViewGenerator<T: ChartBarModel> {
         
         let direction: ChartBarDirection = {
             switch (horizontal: horizontal, yLow: yAxis.low, xLow: xAxis.low) {
-            case (horizontal: true, yLow: true, _): return .LeftToRight
-            case (horizontal: false, _, xLow: true): return .BottomToTop
+            case (horizontal: true, yLow: true, _): return .leftToRight
+            case (horizontal: false, _, xLow: true): return .bottomToTop
             default: fatalError("Direction not supported - stacked bars must be from left to right or bottom to top")
             }
         }()
@@ -52,8 +52,8 @@ class ChartBarsViewGenerator<T: ChartBarModel> {
         let barWidth = barWidthMaybe ?? {
             let axis: ChartAxisLayer = {
                 switch direction {
-                case .LeftToRight: return yAxis
-                case .BottomToTop: return xAxis
+                case .leftToRight: return yAxis
+                case .bottomToTop: return xAxis
                 }
                 }()
             let spacing: CGFloat = barSpacingMaybe ?? 0
@@ -67,25 +67,25 @@ class ChartBarsViewGenerator<T: ChartBarModel> {
         self.barWidth = barWidth
     }
     
-    func viewPoints(barModel: T, constantScreenLoc: CGFloat) -> (p1: CGPoint, p2: CGPoint) {
+    func viewPoints(_ barModel: T, constantScreenLoc: CGFloat) -> (p1: CGPoint, p2: CGPoint) {
         switch self.direction {
-        case .LeftToRight:
+        case .leftToRight:
             return (
-                CGPointMake(self.xAxis.screenLocForScalar(barModel.axisValue1.scalar), constantScreenLoc),
-                CGPointMake(self.xAxis.screenLocForScalar(barModel.axisValue2.scalar), constantScreenLoc))
-        case .BottomToTop:
+                CGPoint(x: self.xAxis.screenLocForScalar(barModel.axisValue1.scalar), y: constantScreenLoc),
+                CGPoint(x: self.xAxis.screenLocForScalar(barModel.axisValue2.scalar), y: constantScreenLoc))
+        case .bottomToTop:
             return (
-                CGPointMake(constantScreenLoc, self.yAxis.screenLocForScalar(barModel.axisValue1.scalar)),
-                CGPointMake(constantScreenLoc, self.yAxis.screenLocForScalar(barModel.axisValue2.scalar)))
+                CGPoint(x: constantScreenLoc, y: self.yAxis.screenLocForScalar(barModel.axisValue1.scalar)),
+                CGPoint(x: constantScreenLoc, y: self.yAxis.screenLocForScalar(barModel.axisValue2.scalar)))
         }
     }
     
-    func constantScreenLoc(barModel: T) -> CGFloat {
-        return (self.direction == .LeftToRight ? self.yAxis : self.xAxis).screenLocForScalar(barModel.constant.scalar)
+    func constantScreenLoc(_ barModel: T) -> CGFloat {
+        return (self.direction == .leftToRight ? self.yAxis : self.xAxis).screenLocForScalar(barModel.constant.scalar)
     }
     
     // constantScreenLoc: (screen) coordinate that is equal in p1 and p2 - for vertical bar this is the x coordinate, for horizontal bar this is the y coordinate
-    func generateView(barModel: T, constantScreenLoc constantScreenLocMaybe: CGFloat? = nil, bgColor: UIColor?, animDuration: Float) -> ChartPointViewBar {
+    func generateView(_ barModel: T, constantScreenLoc constantScreenLocMaybe: CGFloat? = nil, bgColor: UIColor?, animDuration: Float) -> ChartPointViewBar {
         
         let constantScreenLoc = constantScreenLocMaybe ?? self.constantScreenLoc(barModel)
         
@@ -125,7 +125,7 @@ public class ChartBarsLayer: ChartCoordsSpaceLayer {
         super.init(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame)
     }
     
-    public override func chartInitialized(chart chart: Chart) {
+    public override func chartInitialized(chart: Chart) {
         
         
         let barsGenerator = ChartBarsViewGenerator(horizontal: self.horizontal, xAxis: self.xAxis, yAxis: self.yAxis, chartInnerFrame: self.innerFrame, barWidth: self.barWidth, barSpacing: self.barSpacing)

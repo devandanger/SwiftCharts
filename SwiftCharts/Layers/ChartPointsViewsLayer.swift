@@ -28,7 +28,7 @@ public class ChartPointsViewsLayer<T: ChartPoint, U: UIView>: ChartPointsLayer<T
         super.init(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPoints, displayDelay: displayDelay)
     }
     
-    override func display(chart chart: Chart) {
+    override func display(chart: Chart) {
         super.display(chart: chart)
         
         self.viewsWithChartPoints = self.generateChartPointViews(chartPointModels: self.chartPointsModels, chart: chart)
@@ -37,20 +37,20 @@ public class ChartPointsViewsLayer<T: ChartPoint, U: UIView>: ChartPointsLayer<T
             for v in self.viewsWithChartPoints {chart.addSubview(v.view)}
             
         } else {
-            func next(index: Int, delay: dispatch_time_t) {
+            func next(_ index: Int, delay: DispatchTime) {
                 if index < self.viewsWithChartPoints.count {
-                    dispatch_after(delay, dispatch_get_main_queue()) {() -> Void in
+                    DispatchQueue.main.after(when: delay) {() -> Void in
                         let view = self.viewsWithChartPoints[index].view
                         chart.addSubview(view)
                         next(index + 1, delay: ChartUtils.toDispatchTime(self.delayBetweenItems))
                     }
                 }
             }
-            next(0, delay: 0)
+            next(0, delay: ChartUtils.toDispatchTime(0))
         }
     }
     
-    private func generateChartPointViews(chartPointModels chartPointModels: [ChartPointLayerModel<T>], chart: Chart) -> [ViewWithChartPoint] {
+    private func generateChartPointViews(chartPointModels: [ChartPointLayerModel<T>], chart: Chart) -> [ViewWithChartPoint] {
         let viewsWithChartPoints: [ViewWithChartPoint] = self.chartPointsModels.flatMap { model in
             if let view = self.viewGenerator(chartPointModel: model, layer: self, chart: chart) {
                 return (view: view, chartPointModel: model)
@@ -64,19 +64,19 @@ public class ChartPointsViewsLayer<T: ChartPoint, U: UIView>: ChartPointsLayer<T
         return viewsWithChartPoints
     }
     
-    override public func chartPointsForScreenLoc(screenLoc: CGPoint) -> [T] {
+    override public func chartPointsForScreenLoc(_ screenLoc: CGPoint) -> [T] {
         return self.filterChartPoints{self.inXBounds(screenLoc.x, view: $0.view) && self.inYBounds(screenLoc.y, view: $0.view)}
     }
     
-    override public func chartPointsForScreenLocX(x: CGFloat) -> [T] {
+    override public func chartPointsForScreenLocX(_ x: CGFloat) -> [T] {
         return self.filterChartPoints{self.inXBounds(x, view: $0.view)}
     }
     
-    override public func chartPointsForScreenLocY(y: CGFloat) -> [T] {
+    override public func chartPointsForScreenLocY(_ y: CGFloat) -> [T] {
         return self.filterChartPoints{self.inYBounds(y, view: $0.view)}
     }
     
-    private func filterChartPoints(filter: (ViewWithChartPoint) -> Bool) -> [T] {
+    private func filterChartPoints(_ filter: (ViewWithChartPoint) -> Bool) -> [T] {
         return self.viewsWithChartPoints.reduce([]) {arr, viewWithChartPoint in
             if filter(viewWithChartPoint) {
                 return arr + [viewWithChartPoint.chartPointModel.chartPoint]
@@ -86,11 +86,11 @@ public class ChartPointsViewsLayer<T: ChartPoint, U: UIView>: ChartPointsLayer<T
         }
     }
     
-    private func inXBounds(x: CGFloat, view: UIView) -> Bool {
+    private func inXBounds(_ x: CGFloat, view: UIView) -> Bool {
         return (x > view.frame.origin.x) && (x < (view.frame.origin.x + view.frame.width))
     }
     
-    private func inYBounds(y: CGFloat, view: UIView) -> Bool {
+    private func inYBounds(_ y: CGFloat, view: UIView) -> Bool {
         return (y > view.frame.origin.y) && (y < (view.frame.origin.y + view.frame.height))
     }
 }

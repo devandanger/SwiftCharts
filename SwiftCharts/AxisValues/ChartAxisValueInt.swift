@@ -17,7 +17,7 @@ public class ChartAxisValueInt: ChartAxisValue {
         super.init(scalar: Double(int), labelSettings: labelSettings)
     }
     
-    override public func copy(scalar: Double) -> ChartAxisValueInt {
+    override public func copy(_ scalar: Double) -> ChartAxisValueInt {
         return ChartAxisValueInt(self.int, labelSettings: self.labelSettings)
     }
 

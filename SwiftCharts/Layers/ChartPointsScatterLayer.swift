@@ -19,13 +19,13 @@ public class ChartPointsScatterLayer<T: ChartPoint>: ChartPointsLayer<T> {
         super.init(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPoints, displayDelay: displayDelay)
     }
     
-    override public func chartViewDrawing(context context: CGContextRef, chart: Chart) {
+    override public func chartViewDrawing(context: CGContext, chart: Chart) {
         for chartPointModel in self.chartPointsModels {
             self.drawChartPointModel(context: context, chartPointModel: chartPointModel)
         }
     }
     
-    public func drawChartPointModel(context context: CGContextRef, chartPointModel: ChartPointLayerModel<T>) {
+    public func drawChartPointModel(context: CGContext, chartPointModel: ChartPointLayerModel<T>) {
         fatalError("override")
     }
 }
@@ -36,19 +36,19 @@ public class ChartPointsScatterTrianglesLayer<T: ChartPoint>: ChartPointsScatter
         super.init(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPoints, displayDelay: displayDelay, itemSize: itemSize, itemFillColor: itemFillColor)
     }
     
-    override public func drawChartPointModel(context context: CGContextRef, chartPointModel: ChartPointLayerModel<T>) {
+    override public func drawChartPointModel(context: CGContext, chartPointModel: ChartPointLayerModel<T>) {
         let w = self.itemSize.width
         let h = self.itemSize.height
         
-        let path = CGPathCreateMutable()
-        CGPathMoveToPoint(path, nil, chartPointModel.screenLoc.x, chartPointModel.screenLoc.y - h / 2)
-        CGPathAddLineToPoint(path, nil, chartPointModel.screenLoc.x + w / 2, chartPointModel.screenLoc.y + h / 2)
-        CGPathAddLineToPoint(path, nil, chartPointModel.screenLoc.x - w / 2, chartPointModel.screenLoc.y + h / 2)
-        CGPathCloseSubpath(path)
+        let path = CGMutablePath()
+        path.moveTo(nil, x: chartPointModel.screenLoc.x, y: chartPointModel.screenLoc.y - h / 2)
+        path.addLineTo(nil, x: chartPointModel.screenLoc.x + w / 2, y: chartPointModel.screenLoc.y + h / 2)
+        path.addLineTo(nil, x: chartPointModel.screenLoc.x - w / 2, y: chartPointModel.screenLoc.y + h / 2)
+        path.closeSubpath()
         
-        CGContextSetFillColorWithColor(context, self.itemFillColor.CGColor)
-        CGContextAddPath(context, path)
-        CGContextFillPath(context)
+        context.setFillColor(self.itemFillColor.cgColor)
+        context.addPath(path)
+        context.fillPath()
     }
 }
 
@@ -58,12 +58,12 @@ public class ChartPointsScatterSquaresLayer<T: ChartPoint>: ChartPointsScatterLa
         super.init(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPoints, displayDelay: displayDelay, itemSize: itemSize, itemFillColor: itemFillColor)
     }
     
-    override public func drawChartPointModel(context context: CGContextRef, chartPointModel: ChartPointLayerModel<T>) {
+    override public func drawChartPointModel(context: CGContext, chartPointModel: ChartPointLayerModel<T>) {
         let w = self.itemSize.width
         let h = self.itemSize.height
         
-        CGContextSetFillColorWithColor(context, self.itemFillColor.CGColor)
-        CGContextFillRect(context, CGRectMake(chartPointModel.screenLoc.x - w / 2, chartPointModel.screenLoc.y - h / 2, w, h))
+        context.setFillColor(self.itemFillColor.cgColor)
+        context.fill(CGRect(x: chartPointModel.screenLoc.x - w / 2, y: chartPointModel.screenLoc.y - h / 2, width: w, height: h))
     }
 }
 
@@ -73,12 +73,12 @@ public class ChartPointsScatterCirclesLayer<T: ChartPoint>: ChartPointsScatterLa
         super.init(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPoints, displayDelay: displayDelay, itemSize: itemSize, itemFillColor: itemFillColor)
     }
     
-    override public func drawChartPointModel(context context: CGContextRef, chartPointModel: ChartPointLayerModel<T>) {
+    override public func drawChartPointModel(context: CGContext, chartPointModel: ChartPointLayerModel<T>) {
         let w = self.itemSize.width
         let h = self.itemSize.height
         
-        CGContextSetFillColorWithColor(context, self.itemFillColor.CGColor)
-        CGContextFillEllipseInRect(context, CGRectMake(chartPointModel.screenLoc.x - w / 2, chartPointModel.screenLoc.y - h / 2, w, h))
+        context.setFillColor(self.itemFillColor.cgColor)
+        context.fillEllipse(in: CGRect(x: chartPointModel.screenLoc.x - w / 2, y: chartPointModel.screenLoc.y - h / 2, width: w, height: h))
     }
 }
 
@@ -91,16 +91,16 @@ public class ChartPointsScatterCrossesLayer<T: ChartPoint>: ChartPointsScatterLa
         super.init(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPoints, displayDelay: displayDelay, itemSize: itemSize, itemFillColor: itemFillColor)
     }
     
-    override public func drawChartPointModel(context context: CGContextRef, chartPointModel: ChartPointLayerModel<T>) {
+    override public func drawChartPointModel(context: CGContext, chartPointModel: ChartPointLayerModel<T>) {
         let w = self.itemSize.width
         let h = self.itemSize.height
         
-        func drawLine(p1X: CGFloat, p1Y: CGFloat, p2X: CGFloat, p2Y: CGFloat) {
-            CGContextSetStrokeColorWithColor(context, self.itemFillColor.CGColor)
-            CGContextSetLineWidth(context, self.strokeWidth)
-            CGContextMoveToPoint(context, p1X, p1Y)
-            CGContextAddLineToPoint(context, p2X, p2Y)
-            CGContextStrokePath(context)
+        func drawLine(_ p1X: CGFloat, p1Y: CGFloat, p2X: CGFloat, p2Y: CGFloat) {
+            context.setStrokeColor(self.itemFillColor.cgColor)
+            context.setLineWidth(self.strokeWidth)
+            context.moveTo(x: p1X, y: p1Y)
+            context.addLineTo(x: p2X, y: p2Y)
+            context.strokePath()
         }
 
         drawLine(chartPointModel.screenLoc.x - w / 2, p1Y: chartPointModel.screenLoc.y - h / 2, p2X: chartPointModel.screenLoc.x + w / 2, p2Y: chartPointModel.screenLoc.y + h / 2)

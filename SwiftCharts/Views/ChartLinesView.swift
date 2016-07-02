@@ -9,7 +9,7 @@
 import UIKit
 
 public protocol ChartLinesViewPathGenerator {
-    func generatePath(points points: [CGPoint], lineWidth: CGFloat) -> UIBezierPath
+    func generatePath(points: [CGPoint], lineWidth: CGFloat) -> UIBezierPath
 }
 
 public class ChartLinesView: UIView {
@@ -28,7 +28,7 @@ public class ChartLinesView: UIView {
         
         super.init(frame: frame)
 
-        self.backgroundColor = UIColor.clearColor()
+        self.backgroundColor = UIColor.clear()
         self.show(path: path)
     }
 
@@ -36,40 +36,40 @@ public class ChartLinesView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func createLineMask(frame frame: CGRect) -> CALayer {
+    private func createLineMask(frame: CGRect) -> CALayer {
         let lineMaskLayer = CAShapeLayer()
         var maskRect = frame
         maskRect.origin.y = 0
         maskRect.size.height = frame.size.height
-        let path = CGPathCreateWithRect(maskRect, nil)
+        let path = CGPath(rect: maskRect, transform: nil)
         
         lineMaskLayer.path = path
         
         return lineMaskLayer
     }
 
-    private func generateLayer(path path: UIBezierPath) -> CAShapeLayer {
+    private func generateLayer(path: UIBezierPath) -> CAShapeLayer {
         let lineLayer = CAShapeLayer()
         lineLayer.lineJoin = kCALineJoinBevel
-        lineLayer.fillColor   = UIColor.clearColor().CGColor
+        lineLayer.fillColor   = UIColor.clear().cgColor
         lineLayer.lineWidth   = self.lineWidth
         
-        lineLayer.path = path.CGPath;
-        lineLayer.strokeColor = self.lineColor.CGColor;
+        lineLayer.path = path.cgPath;
+        lineLayer.strokeColor = self.lineColor.cgColor;
         
         if self.animDuration > 0 {
             lineLayer.strokeEnd   = 0.0
             let pathAnimation = CABasicAnimation(keyPath: "strokeEnd")
             pathAnimation.duration = CFTimeInterval(self.animDuration)
             pathAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-            pathAnimation.fromValue = NSNumber(float: 0)
-            pathAnimation.toValue = NSNumber(float: 1)
+            pathAnimation.fromValue = NSNumber(value: 0)
+            pathAnimation.toValue = NSNumber(value: 1)
             pathAnimation.autoreverses = false
-            pathAnimation.removedOnCompletion = false
+            pathAnimation.isRemovedOnCompletion = false
             pathAnimation.fillMode = kCAFillModeForwards
             
             pathAnimation.beginTime = CACurrentMediaTime() + CFTimeInterval(self.animDelay)
-            lineLayer.addAnimation(pathAnimation, forKey: "strokeEndAnimation")
+            lineLayer.add(pathAnimation, forKey: "strokeEndAnimation")
             
         } else {
             lineLayer.strokeEnd = 1
@@ -78,7 +78,7 @@ public class ChartLinesView: UIView {
         return lineLayer
     }
     
-    private func show(path path: UIBezierPath) {
+    private func show(path: UIBezierPath) {
         let lineMask = self.createLineMask(frame: frame)
         self.layer.mask = lineMask
         self.layer.addSublayer(self.generateLayer(path: path))

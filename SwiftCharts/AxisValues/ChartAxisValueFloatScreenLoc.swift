@@ -8,7 +8,7 @@
 
 import UIKit
 
-@available(*, deprecated=0.2.5, message="use ChartAxisValueDoubleScreenLoc instead")
+@available(*, deprecated:0.2.5, message:"use ChartAxisValueDoubleScreenLoc instead")
 public class ChartAxisValueFloatScreenLoc: ChartAxisValueFloat {
     
     private let actualFloat: CGFloat
@@ -19,7 +19,7 @@ public class ChartAxisValueFloatScreenLoc: ChartAxisValueFloat {
     
     // screenLocFloat: model value which will be used to calculate screen position
     // actualFloat: scalar which this axis value really represents
-    public init(screenLocFloat: CGFloat, actualFloat: CGFloat, formatter: NSNumberFormatter = ChartAxisValueFloat.defaultFormatter, labelSettings: ChartLabelSettings = ChartLabelSettings()) {
+    public init(screenLocFloat: CGFloat, actualFloat: CGFloat, formatter: NumberFormatter = ChartAxisValueFloat.defaultFormatter, labelSettings: ChartLabelSettings = ChartLabelSettings()) {
         self.actualFloat = actualFloat
         super.init(screenLocFloat, formatter: formatter, labelSettings: labelSettings)
     }
@@ -27,6 +27,6 @@ public class ChartAxisValueFloatScreenLoc: ChartAxisValueFloat {
     // MARK: CustomStringConvertible
 
     override public var description: String {
-        return self.formatter.stringFromNumber(self.actualFloat)!
+        return self.formatter.string(from: self.actualFloat)!
     }
 }

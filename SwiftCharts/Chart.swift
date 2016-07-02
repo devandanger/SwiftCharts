@@ -97,7 +97,7 @@ public class Chart {
 
      - parameter view: The subview to add to the chart's view
      */
-    public func addSubview(view: UIView) {
+    public func addSubview(_ view: UIView) {
         self.view.addSubview(view)
     }
 
@@ -123,7 +123,7 @@ public class Chart {
 
      - parameter rect: The rect that needs to be drawn
      */
-    private func drawRect(rect: CGRect) {
+    private func drawRect(_ rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()
         for layer in self.layers {
             layer.chartViewDrawing(context: context!, chart: self)
@@ -134,7 +134,7 @@ public class Chart {
 /// A UIView subclass for drawing charts
 public class ChartBaseView: ChartView {
     
-    override public func drawRect(rect: CGRect) {
+    override public func draw(_ rect: CGRect) {
         self.chart?.drawRect(rect)
     }
 }
@@ -158,6 +158,6 @@ public class ChartView: UIView {
      Initialization code shared between all initializers
      */
     func sharedInit() {
-        self.backgroundColor = UIColor.clearColor()
+        self.backgroundColor = UIColor.clear()
     }
 }

@@ -32,8 +32,8 @@ public class ChartPointViewBarGreyOut: ChartPointViewBar {
         super.didMoveToSuperview()
         
         if self.greyOut {
-            UIView.animateWithDuration(CFTimeInterval(self.greyOutAnimDuration), delay: CFTimeInterval(self.greyOutDelay), options: UIViewAnimationOptions.CurveEaseOut, animations: {() -> Void in
-                self.backgroundColor = UIColor.grayColor()
+            UIView.animate(withDuration: CFTimeInterval(self.greyOutAnimDuration), delay: CFTimeInterval(self.greyOutDelay), options: UIViewAnimationOptions.curveEaseOut, animations: {() -> Void in
+                self.backgroundColor = UIColor.gray()
             }, completion: nil)
         }
     }

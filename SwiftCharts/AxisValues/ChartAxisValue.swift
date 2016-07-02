@@ -35,7 +35,7 @@ public class ChartAxisValue: Equatable, CustomStringConvertible {
         return self.copy(self.scalar)
     }
     
-    public func copy(scalar: Double) -> ChartAxisValue {
+    public func copy(_ scalar: Double) -> ChartAxisValue {
         return ChartAxisValue(scalar: scalar, labelSettings: self.labelSettings)
     }
 

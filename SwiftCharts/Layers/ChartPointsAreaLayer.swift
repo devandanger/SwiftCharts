@@ -24,7 +24,7 @@ public class ChartPointsAreaLayer<T: ChartPoint>: ChartPointsLayer<T> {
         super.init(xAxis: xAxis, yAxis: yAxis, innerFrame: innerFrame, chartPoints: chartPoints)
     }
     
-    override func display(chart chart: Chart) {
+    override func display(chart: Chart) {
         var points = self.chartPointScreenLocs
         
         let origin = self.innerFrame.origin
@@ -33,8 +33,8 @@ public class ChartPointsAreaLayer<T: ChartPoint>: ChartPointsLayer<T> {
         let bottomY = origin.y + self.innerFrame.height
         
         if self.addContainerPoints {
-            points.append(CGPointMake(origin.x + xLength, bottomY))
-            points.append(CGPointMake(origin.x, bottomY))
+            points.append(CGPoint(x: origin.x + xLength, y: bottomY))
+            points.append(CGPoint(x: origin.x, y: bottomY))
         }
         
         let areaView = ChartAreasView(points: points, frame: chart.bounds, color: self.areaColor, animDuration: self.animDuration, animDelay: self.animDelay)

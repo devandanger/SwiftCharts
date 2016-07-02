@@ -17,7 +17,7 @@ public class InfoBubble: UIView {
     private let bgColor: UIColor
     private let arrowX: CGFloat
     
-    public init(frame: CGRect, arrowWidth: CGFloat, arrowHeight: CGFloat, bgColor: UIColor = UIColor.whiteColor(), arrowX: CGFloat) {
+    public init(frame: CGRect, arrowWidth: CGFloat, arrowHeight: CGFloat, bgColor: UIColor = UIColor.white(), arrowX: CGFloat) {
         self.arrowWidth = arrowWidth
         self.arrowHeight = arrowHeight
         self.bgColor = bgColor
@@ -25,36 +25,36 @@ public class InfoBubble: UIView {
         let arrowHalf = arrowWidth / 2
         self.arrowX = max(arrowHalf, min(frame.size.width - arrowHalf, arrowX))
         super.init(frame: frame)
-        self.backgroundColor = UIColor.clearColor()
+        self.backgroundColor = UIColor.clear()
     }
 
     required public init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override public func drawRect(rect: CGRect) {
+    override public func draw(_ rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()
-        CGContextSetFillColorWithColor(context, self.bgColor.CGColor)
-        CGContextSetStrokeColorWithColor(context, self.bgColor.CGColor)
-        let rrect = CGRectInset(rect, 0, 20)
+        context?.setFillColor(self.bgColor.cgColor)
+        context?.setStrokeColor(self.bgColor.cgColor)
+        let rrect = rect.insetBy(dx: 0, dy: 20)
         
-        let minx = CGRectGetMinX(rrect), maxx = CGRectGetMaxX(rrect)
-        let miny = CGRectGetMinY(rrect), maxy = CGRectGetMaxY(rrect)
+        let minx = rrect.minX, maxx = rrect.maxX
+        let miny = rrect.minY, maxy = rrect.maxY
         
-        let outlinePath = CGPathCreateMutable()
+        let outlinePath = CGMutablePath()
         
-        CGPathMoveToPoint(outlinePath, nil, minx, miny)
-        CGPathAddLineToPoint(outlinePath, nil, maxx, miny)
-        CGPathAddLineToPoint(outlinePath, nil, maxx, maxy)
-        CGPathAddLineToPoint(outlinePath, nil, self.arrowX + self.arrowWidth / 2, maxy)
-        CGPathAddLineToPoint(outlinePath, nil, self.arrowX, maxy + self.arrowHeight)
-        CGPathAddLineToPoint(outlinePath, nil, self.arrowX - self.arrowWidth / 2, maxy)
+        outlinePath.moveTo(nil, x: minx, y: miny)
+        outlinePath.addLineTo(nil, x: maxx, y: miny)
+        outlinePath.addLineTo(nil, x: maxx, y: maxy)
+        outlinePath.addLineTo(nil, x: self.arrowX + self.arrowWidth / 2, y: maxy)
+        outlinePath.addLineTo(nil, x: self.arrowX, y: maxy + self.arrowHeight)
+        outlinePath.addLineTo(nil, x: self.arrowX - self.arrowWidth / 2, y: maxy)
 
-        CGPathAddLineToPoint(outlinePath, nil, minx, maxy)
+        outlinePath.addLineTo(nil, x: minx, y: maxy)
         
-        CGPathCloseSubpath(outlinePath)
+        outlinePath.closeSubpath()
 
-        CGContextAddPath(context, outlinePath)
-        CGContextFillPath(context)
+        context?.addPath(outlinePath)
+        context?.fillPath()
     }
 }

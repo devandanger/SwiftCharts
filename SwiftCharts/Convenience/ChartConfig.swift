@@ -55,7 +55,7 @@ public struct GuidelinesConfig {
     public let lineWidth: CGFloat
     public let lineColor: UIColor
     
-    public init(dotted: Bool = true, lineWidth: CGFloat = 0.1, lineColor: UIColor = UIColor.blackColor()) {
+    public init(dotted: Bool = true, lineWidth: CGFloat = 0.1, lineColor: UIColor = UIColor.black()) {
         self.dotted = dotted
         self.lineWidth = lineWidth
         self.lineColor = lineColor
@@ -65,7 +65,7 @@ public struct GuidelinesConfig {
 // Helper to generate default guidelines layer for GuidelinesConfig
 public struct GuidelinesDefaultLayerGenerator {
 
-    public static func generateOpt(xAxis xAxis: ChartAxisLayer, yAxis: ChartAxisLayer, chartInnerFrame: CGRect, guidelinesConfig: GuidelinesConfig?) -> ChartLayer? {
+    public static func generateOpt(xAxis: ChartAxisLayer, yAxis: ChartAxisLayer, chartInnerFrame: CGRect, guidelinesConfig: GuidelinesConfig?) -> ChartLayer? {
         if let guidelinesConfig = guidelinesConfig {
             return self.generate(xAxis: xAxis, yAxis: yAxis, chartInnerFrame: chartInnerFrame, guidelinesConfig: guidelinesConfig)
         } else {
@@ -73,7 +73,7 @@ public struct GuidelinesDefaultLayerGenerator {
         }
     }
     
-    public static func generate(xAxis xAxis: ChartAxisLayer, yAxis: ChartAxisLayer, chartInnerFrame: CGRect, guidelinesConfig: GuidelinesConfig) -> ChartLayer {
+    public static func generate(xAxis: ChartAxisLayer, yAxis: ChartAxisLayer, chartInnerFrame: CGRect, guidelinesConfig: GuidelinesConfig) -> ChartLayer {
         if guidelinesConfig.dotted {
             let settings = ChartGuideLinesDottedLayerSettings(linesColor: guidelinesConfig.lineColor, linesWidth: guidelinesConfig.lineWidth)
             return ChartGuideLinesDottedLayer(xAxis: xAxis, yAxis: yAxis, innerFrame: chartInnerFrame, settings: settings)

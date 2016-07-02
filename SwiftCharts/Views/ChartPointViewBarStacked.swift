@@ -16,20 +16,20 @@ public class ChartPointViewBarStacked: ChartPointViewBar {
     
     init(p1: CGPoint, p2: CGPoint, width: CGFloat, stackFrames: [ChartPointViewBarStackedFrame], animDuration: Float = 0.5) {
         self.stackFrames = stackFrames
-        super.init(p1: p1, p2: p2, width: width, bgColor: UIColor.clearColor(), animDuration: animDuration)
+        super.init(p1: p1, p2: p2, width: width, bgColor: UIColor.clear(), animDuration: animDuration)
     }
 
     required public init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override public func drawRect(rect: CGRect) {
+    override public func draw(_ rect: CGRect) {
         
         let context = UIGraphicsGetCurrentContext()
         
         for stackFrame in self.stackFrames {
-            CGContextSetFillColorWithColor(context, stackFrame.color.CGColor)
-            CGContextFillRect(context, stackFrame.rect)
+            context?.setFillColor(stackFrame.color.cgColor)
+            context?.fill(stackFrame.rect)
         }
     }
 }

@@ -16,5 +16,5 @@ public class ChartViewsConflictSolver<T: ChartPoint, U: UIView> {
 
     - parameter views: The views to check for overlap and resolve
     */
-    func solveConflicts(views views: [ChartPointsViewsLayer<T, U>.ViewWithChartPoint]) {}
+    func solveConflicts(views: [ChartPointsViewsLayer<T, U>.ViewWithChartPoint]) {}
 }
